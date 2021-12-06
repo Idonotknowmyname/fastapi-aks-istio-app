@@ -1,0 +1,49 @@
+{{- range $index, $version := .Values.versions_to_deploy }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: greeter
+    version: v{{ add1 $index }}
+  name: greeter-{{ add1 $index }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: greeter
+  template:
+    metadata:
+      labels:
+        app: greeter
+        version: v{{ add1 $index }}
+    spec:
+      containers:
+      - image: greeter.azurecr.io/app/greeter-app:latest
+        imagePullPolicy: Always
+        name: greeter
+        env:
+          - name: SERVICE_VERSION
+            value: {{ $version }}
+        resources:
+          limits:
+            cpu: 300m
+            memory: 1Gi
+        ports:
+          - containerPort: 8000
+            name: greeter-port
+            protocol: TCP
+---
+{{- end }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: greeter
+  labels:
+    app: greeter
+spec:
+  ports:
+  - port: 80
+    targetPort: greeter-port
+    protocol: TCP
+  selector:
+    app: greeter

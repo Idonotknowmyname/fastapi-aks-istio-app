@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: greeter-vs
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - greeter-gateway
+  http:
+  - route:
+    - destination:
+        host: greeter
+        subset: v1
+      weight: 80
+    - destination:
+        host: greeter
+        subset: v2
+      weight: 20
