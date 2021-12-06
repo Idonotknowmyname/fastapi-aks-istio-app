@@ -37,7 +37,7 @@ export APP_HOST=$(kubectl -n istio-system get svc istio-ingressgateway -o jsonpa
 
 Finally, you can make an HTTP request to `http://${APP_HOST}/hello` to test the app's output, here is an example using `curl`:
 ```bash
-curl "http://${APP_HOST}/hello
+curl "http://${APP_HOST}/hello"
 ```
 You will see that approximately 80% of the times you will get a certain version returned in the message, while 20% of the times you will get a different one (achieved using Istio virtual services and routing rules).
 
